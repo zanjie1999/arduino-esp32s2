@@ -7,7 +7,7 @@
 #include <functional>
 extern "C" {
 #include "lwip/ip_addr.h"
-#include <tcpip_adapter.h>
+#include "esp_netif.h"
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 }
@@ -58,7 +58,6 @@ protected:
     size_t _len;
     size_t _index;
 public:
-    AsyncUDPPacket(AsyncUDPPacket &packet);
     AsyncUDPPacket(AsyncUDP *udp, pbuf *pb, const ip_addr_t *addr, uint16_t port, struct netif * netif);
     virtual ~AsyncUDPPacket();
 
@@ -96,7 +95,6 @@ protected:
     udp_pcb *_pcb;
     //xSemaphoreHandle _lock;
     bool _connected;
-	esp_err_t _lastErr;
     AuPacketHandlerFunction _handler;
 
     bool _init();
@@ -146,7 +144,6 @@ public:
     IPAddress listenIP();
     IPv6Address listenIPv6();
     bool connected();
-	esp_err_t lastErr();
     operator bool();
 
     static void _s_recv(void *arg, udp_pcb *upcb, pbuf *p, const ip_addr_t *addr, uint16_t port, struct netif * netif);

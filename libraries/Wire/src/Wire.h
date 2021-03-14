@@ -71,8 +71,7 @@ public:
     //call setPins() first, so that begin() can be called without arguments from libraries
     bool setPins(int sda, int scl);
     
-    bool begin(int sda=-1, int scl=-1, uint32_t frequency=0); // returns true, if successful init of i2c bus
-      // calling will attemp to recover hung bus
+    bool begin(int sda=-1, int scl=-1, uint32_t frequency=100000); // returns true, if successful init of i2c bus
 
     void setClock(uint32_t frequency); // change bus clock without initing hardware
     size_t getClock(); // current bus clock rate in hz

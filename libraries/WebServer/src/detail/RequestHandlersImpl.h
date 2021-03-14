@@ -113,7 +113,7 @@ public:
         }
 
         File f = _fs.open(path, "r");
-        if (!f || !f.available())
+        if (!f)
             return false;
 
         if (_cache_header.length() != 0)

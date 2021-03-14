@@ -32,7 +32,7 @@ extern "C" {
 #include <string.h>
 #include <esp_err.h>
 #include <esp_wifi.h>
-#include <esp_event_loop.h>
+#include <esp_event.h>
 }
 
 
@@ -86,16 +86,6 @@ void WiFiClass::printDiag(Print& p)
 
     p.print("BSSID set: ");
     p.println(conf.sta.bssid_set);
-}
-
-void WiFiClass::enableProv(bool status)
-{
-    prov_enable = status;
-}
-
-bool WiFiClass::isProvEnabled()
-{
-    return prov_enable;
 }
 
 WiFiClass WiFi;

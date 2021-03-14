@@ -28,9 +28,7 @@
  * @brief Construct a default advertising object.
  *
  */
-BLEAdvertising::BLEAdvertising()
-: m_scanRespData{}
-{
+BLEAdvertising::BLEAdvertising() {
 	m_advData.set_scan_rsp        = false;
 	m_advData.include_name        = true;
 	m_advData.include_txpower     = true;
@@ -217,15 +215,10 @@ void BLEAdvertising::start() {
 	}
 
 	if (!m_customScanResponseData && m_scanResp) {
-		// Set the configuration for scan response.
-		memcpy(&m_scanRespData, &m_advData, sizeof(esp_ble_adv_data_t)); // Copy the content of m_advData.
-		m_scanRespData.set_scan_rsp = true; // Define this struct as scan response data
-		m_scanRespData.include_name = true; // Caution: This may lead to a crash if the device name has more than 29 characters
-		m_scanRespData.include_txpower = true;
-		m_scanRespData.appearance = 0; // If defined the 'Appearance' attribute is already included in the advertising data
-		m_scanRespData.flag = 0; // 'Flags' attribute should no be included in the scan response
-
-		errRc = ::esp_ble_gap_config_adv_data(&m_scanRespData);
+		m_advData.set_scan_rsp = true;
+		m_advData.include_name = m_scanResp;
+		m_advData.include_txpower = m_scanResp;
+		errRc = ::esp_ble_gap_config_adv_data(&m_advData);
 		if (errRc != ESP_OK) {
 			log_e("<< esp_ble_gap_config_adv_data (Scan response): rc=%d %s", errRc, GeneralUtils::errorToString(errRc));
 			return;

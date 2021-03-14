@@ -25,8 +25,6 @@
 #include <functional>
 
 typedef std::function<void(const uint8_t *buffer, size_t size)> BluetoothSerialDataCb;
-typedef std::function<void(uint32_t num_val)> ConfirmRequestCb;
-typedef std::function<void(boolean success)> AuthCompleteCb;
 
 class BluetoothSerial: public Stream
 {
@@ -36,6 +34,9 @@ class BluetoothSerial: public Stream
         ~BluetoothSerial(void);
 
         bool begin(String localName=String(), bool isMaster=false);
+        bool begin(unsigned long baud){//compatibility
+            return begin();
+        }
         int available(void);
         int peek(void);
         bool hasClient(void);
@@ -46,10 +47,6 @@ class BluetoothSerial: public Stream
         void end(void);
         void onData(BluetoothSerialDataCb cb);
         esp_err_t register_callback(esp_spp_cb_t * callback);
-        
-        void onConfirmRequest(ConfirmRequestCb cb);
-        void onAuthComplete(AuthCompleteCb cb);
-        void confirmReply(boolean confirm);
 
         void enableSSP();
         bool setPin(const char *pin);
@@ -60,7 +57,8 @@ class BluetoothSerial: public Stream
         bool isReady(bool checkMaster=false, int timeout=0);
         bool disconnect();
         bool unpairDevice(uint8_t remoteAddress[]);
-
+        
+        operator bool() const;
     private:
         String local_name;
 

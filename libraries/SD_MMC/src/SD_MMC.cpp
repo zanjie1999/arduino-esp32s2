@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "SD_MMC.h"
+#ifndef CONFIG_IDF_TARGET_ESP32S2 //SDMMC does not work on ESP32S2
 #include "vfs_api.h"
 
 extern "C" {
@@ -24,7 +26,6 @@ extern "C" {
 #include "sdmmc_cmd.h"
 }
 #include "ff.h"
-#include "SD_MMC.h"
 
 using namespace fs;
 /*
@@ -35,7 +36,7 @@ SDMMCFS::SDMMCFS(FSImplPtr impl)
     : FS(impl), _card(NULL)
 {}
 
-bool SDMMCFS::begin(const char * mountpoint, bool mode1bit, bool format_if_mount_failed)
+bool SDMMCFS::begin(const char * mountpoint, bool mode1bit)
 {
     if(_card) {
         return true;
@@ -68,7 +69,7 @@ bool SDMMCFS::begin(const char * mountpoint, bool mode1bit, bool format_if_mount
     }
 
     esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-        .format_if_mount_failed = format_if_mount_failed,
+        .format_if_mount_failed = false,
         .max_files = 5,
         .allocation_unit_size = 0
     };
@@ -145,3 +146,4 @@ uint64_t SDMMCFS::usedBytes()
 }
 
 SDMMCFS SD_MMC = SDMMCFS(FSImplPtr(new VFSImpl()));
+#endif /* CONFIG_IDF_TARGET_ESP32 */

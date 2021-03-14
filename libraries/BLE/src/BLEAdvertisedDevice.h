@@ -42,8 +42,6 @@ public:
 	BLEUUID     getServiceUUID();
 	BLEUUID     getServiceUUID(int i);
 	int         getServiceDataCount();
-	int         getServiceDataUUIDCount();
-	int         getServiceUUIDCount();
 	int8_t      getTXPower();
 	uint8_t* 	getPayload();
 	size_t		getPayloadLength();
@@ -66,7 +64,6 @@ private:
 	friend class BLEScan;
 
 	void parseAdvertisement(uint8_t* payload, size_t total_len=62);
-	void setPayload(uint8_t* payload, size_t total_len=62);
 	void setAddress(BLEAddress address);
 	void setAdFlag(uint8_t adFlag);
 	void setAdvertizementResult(uint8_t* payload);
@@ -85,6 +82,8 @@ private:
 	bool m_haveManufacturerData;
 	bool m_haveName;
 	bool m_haveRSSI;
+	bool m_haveServiceData;
+	bool m_haveServiceUUID;
 	bool m_haveTXPower;
 
 

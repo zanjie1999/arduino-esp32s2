@@ -51,9 +51,9 @@ License (MIT license):
 #define STR(tok) tok
 #endif
 
-static void _on_sys_event(system_event_t *event){
-    mdns_handle_system_event(NULL, event);
-}
+// static void _on_sys_event(arduino_event_t *event){
+//     mdns_handle_system_event(NULL, event);
+// }
 
 MDNSResponder::MDNSResponder() :results(NULL) {}
 MDNSResponder::~MDNSResponder() {
@@ -65,7 +65,7 @@ bool MDNSResponder::begin(const char* hostName){
         log_e("Failed starting MDNS");
         return false;
     }
-    WiFi.onEvent(_on_sys_event);
+    //WiFi.onEvent(_on_sys_event);
     _hostname = hostName;
 	_hostname.toLowerCase();
     if(mdns_hostname_set(hostName)) {
@@ -130,7 +130,7 @@ void MDNSResponder::disableWorkstation(){
     }
 }
 
-bool MDNSResponder::addService(char *name, char *proto, uint16_t port){
+void MDNSResponder::addService(char *name, char *proto, uint16_t port){
     char _name[strlen(name)+2];
     char _proto[strlen(proto)+2];
 	if (name[0] == '_') {
@@ -146,9 +146,7 @@ bool MDNSResponder::addService(char *name, char *proto, uint16_t port){
 
     if(mdns_service_add(NULL, _name, _proto, port, NULL, 0)) {
         log_e("Failed adding service %s.%s.\n", name, proto);
-	return false;
     }
-    return true;
 }
 
 bool MDNSResponder::addServiceTxt(char *name, char *proto, char *key, char *value){
@@ -173,7 +171,7 @@ bool MDNSResponder::addServiceTxt(char *name, char *proto, char *key, char *valu
 }
 
 IPAddress MDNSResponder::queryHost(char *host, uint32_t timeout){
-    struct ip4_addr addr;
+    esp_ip4_addr_t addr;
     addr.addr = 0;
 
     esp_err_t err = mdns_query_a(host, timeout,  &addr);
